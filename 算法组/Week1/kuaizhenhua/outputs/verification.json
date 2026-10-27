@@ -4,8 +4,8 @@
   "output_directory": "outputs",
   "check_count": 118,
   "failed_check_count": 0,
-  "png_count": 249,
-  "reopened_png_count": 249,
+  "png_count": 171,
+  "reopened_png_count": 171,
   "task1": {
     "image_count": 5,
     "verified_output_png_count": 15
@@ -929,8 +929,8 @@
     {
       "check": "all_output_pngs_reopen",
       "passed": true,
-      "found_png_count": 249,
-      "reopened_png_count": 249,
+      "found_png_count": 171,
+      "reopened_png_count": 171,
       "errors": []
     }
   ]

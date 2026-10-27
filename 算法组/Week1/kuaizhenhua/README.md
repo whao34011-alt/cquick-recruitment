@@ -8,20 +8,18 @@
 - 系统 / Python 版本：Windows（环境记录版本 10.0.26200）/ Python 3.10.22
 - OpenCV 版本：4.12.0；NumPy 2.2.6；Matplotlib 3.10.7
 
-代码和合成练习素材由助手协助准备、调试，我实际运行了任务一至三，并完成看图比较、暗光参数调整和默认配置的视频回放。文中注明了后续补充的程序检查。
-
-2026-10-27 按 GitHub 规范重新运行了环境检查、三个必做任务、暗光对照及视频，并保存了带姓名拼音和当时运行时间的截图。
+代码和合成素材由代码助手协助准备、调试。我实际运行了任务一至三，完成看图比较、暗光参数调整及默认视频回放，并于 2026-10-27 重新运行，补齐带姓名拼音和运行时间的七张截图。程序预检与个人观察在下文分别说明。
 
 ## 二、环境与运行方式
 
-已有可用的 Python 3.10 环境时直接使用，不必重复创建。没有合适环境且已安装 Conda 时，先创建并激活：
+以下命令在 `算法组/Week1/kuaizhenhua/` 下执行。已有可用的 Python 3.10 环境直接使用；没有合适环境且已安装 Conda 时，先执行：
 
 ```bash
 conda create -n cv_practice python=3.10 -y
 conda activate cv_practice
 ```
 
-以下命令均在 `算法组/Week1/kuaizhenhua/` 下执行。依赖版本写在 `src/requirements.txt`，安装与检查命令为：
+安装固定版本的依赖并检查环境：
 
 ```bash
 python -m pip install -r src/requirements.txt
@@ -37,23 +35,38 @@ python src/task2_processing.py
 python src/task3_color_detect.py
 ```
 
-默认输入为 `data/images/`，输出为 `outputs/task1/`、`outputs/task2/`、`outputs/task3/`，配置为 `src/configs/blue.json`。默认路径由脚本位置确定；手动传入的相对路径以终端当前目录为准。输入输出分开，原图不覆盖；重复运行会更新对应结果，保留不同实验时另设 `--output-dir`。`python src/run_all.py` 可以连续运行三个必做任务。
+默认配置为 `src/configs/blue.json`，路径由脚本位置确定；手动传入的相对路径以终端当前目录为准。原图与输出分开，重复运行会更新结果；要保留其他实验可另设 `--output-dir`。`python src/run_all.py` 可连续运行三个必做任务。
 
-PNG 中间图按处理顺序编号。任务三按要求保留 `mask.png`、`result.png` 两个固定文件名，每张输入有自己的子目录。参数、尺寸、中心和面积同时保存为 JSON，不只提交截图。中文路径兼容读写在 `src/common.py` 中，源码含中文注释。
+主要文件放置如下，源码含中文注释，中间图按处理顺序编号：
 
-**运行截图：** 在本人终端中依次执行了 `python src/record_step.py 1` 至 `python src/record_step.py 6`，运行后截图。该脚本打印姓名 `kuaizhenhua`、真实当前时间、命令和结果，不自动制作截图。以下截图保存在 `outputs/records/`，均小于 1 MB，保留了原始截图内容。
+```text
+src/                   完整源码、参数配置、依赖清单
+data/images/           5 张练习图；holdout/ 是新增测试图
+data/ground_truth/     合成图对应的少量真值掩膜，供程序核验
+data/videos/           合成视频清单；视频文件在本地重新生成
+outputs/task1/         缩放、裁剪、灰度与保存检查
+outputs/task2/         中间图、参数对照和数值记录
+outputs/task3/         五张图的定位结果及暗光调整结果
+outputs/task3_holdout/ 新增测试图的定位结果
+outputs/task4/         最新一组视频运行记录及代表帧
+outputs/records/       七张带姓名与时间的实际运行截图
+```
 
-| 步骤 | 内容 | 截图文件 | 本次记录 |
-|---|---|---|---|
-| 1 | 环境检查 | [01_environment.png](outputs/records/01_environment.png) | 21:50，四项版本正常输出 |
-| 2 | 任务一 | [02_task1.png](outputs/records/02_task1.png) | 21:52，5 张图处理及保存检查成功 |
-| 3 | 任务二 | [03_task2.png](outputs/records/03_task2.png) | 21:52，5 组参数结果生成成功 |
-| 4 | 任务三及新增测试图 | [04_task3.png](outputs/records/04_task3.png) | 21:52，原 5 张图及新图运行成功 |
-| 5 | 暗光参数调整 | [05_dark_adjustment.png](outputs/records/05_dark_adjustment.png) | 21:53，暗光图检出 1 个候选 |
-| 6 | 视频回放 | [06_video.png](outputs/records/06_video.png) | 21:53，检测画面、掩膜及运行终端 |
-| 7 | 视频结束与核验 | [07_verification.png](outputs/records/07_verification.png) | 21:55，120 帧正常结束，118 项核验通过 |
+`data/ground_truth/` 是随合成图片生成的校验材料，`verify_demo.py` 等程序需要用它核对掩膜和几何结果，并非额外下载的数据集，不能作为冗余文件删除。PNG 保存与中文路径兼容处理见 `src/common.py`。
 
-截图中的核验结果是 242 张 PNG 全部可读，这是放入本组截图前的数量；补入截图后再次核验，计数会相应增加。使用 `--check-video` 的无窗口检查只用于程序验证。
+**实际运行截图：** 2026-10-27 在终端执行 `python src/record_step.py 1` 至 `6` 后，由本人截图保存。脚本只打印姓名、真实当前时间、命令和结果，不自动制作截图。
+
+| 内容 | 截图文件 |
+|---|---|
+| 环境检查 | [01_environment.png](outputs/records/01_environment.png) |
+| 任务一 | [02_task1.png](outputs/records/02_task1.png) |
+| 任务二 | [03_task2.png](outputs/records/03_task2.png) |
+| 任务三及新增图 | [04_task3.png](outputs/records/04_task3.png) |
+| 暗光调整 | [05_dark_adjustment.png](outputs/records/05_dark_adjustment.png) |
+| 视频回放 | [06_video.png](outputs/records/06_video.png) |
+| 视频结束与核验 | [07_verification.png](outputs/records/07_verification.png) |
+
+七张截图均小于 1 MB。第七张中的“242 张 PNG”是清理前整批本地结果的核验数量；提交版移除了重复视频结果，PNG 数量较少是正常的，原截图内容未作改写。
 
 ## 三、任务完成情况
 
@@ -64,7 +77,7 @@ PNG 中间图按处理顺序编号。任务三按要求保留 `mask.png`、`resu
 - 缩放比例为 0.5，得到 320×240。裁剪参数为 `0.25 0.25 0.5 0.5`，表示左上角 x、y 与宽、高相对原图的比例，对应 `image[120:360,160:480]`。
 - 运行时五张图均读取成功，所有 PNG 保存后重新读取并通过检查，没有报错，原图保留。
 
-我查看第一张图后发现：缩放后方块变小，但比例不变；裁剪只留下中间部分，方块看上去更大；灰度图中的蓝色变成灰色。裁剪没有放大方块的像素尺寸，只是背景变少，方块占画面的比例更高。这是本次需要分清的地方，没有遇到原图被覆盖的问题。
+我查看第一张图后发现：缩放后方块变小，但比例不变；裁剪只留下中间部分，方块看上去更大；灰度图中的蓝色变成灰色。裁剪没有放大方块的像素尺寸，只是背景变少，方块占画面的比例更高。本次没有遇到原图被覆盖的问题。
 
 彩色图数组形状是 `(480,640,3)`，顺序为高、宽、通道；灰度图是 `(480,640)`。数组切片先 y 后 x。OpenCV 默认 BGR，交给按 RGB 显示的工具前要转换通道顺序。
 
@@ -107,7 +120,7 @@ PNG 中间图按处理顺序编号。任务三按要求保留 `mask.png`、`resu
 | `04_dark_fail` | 暗光 | 未检出 | 无 | 漏检 | 肉眼能看到方块，但没有框和红点；目标亮度低于门槛 |
 | `05_same_color_fail` | 同色圆形干扰 | 方块 (249.5,229.5)；圆 (500,285) | 方块 18919；圆 25190 | 误检 | 两个物体都有橙色框；同色圆也符合颜色与面积条件 |
 
-每张图的结果位于 `outputs/task3/图片名/`，其中 `mask.png` 是开闭运算后的掩膜，`result.png` 是标注图。其余中间图为 `01_mask_raw.png`、`02_mask_opened.png`、`04_mask_filtered.png`、`05_extracted.png`、`07_comparison.png`。对应 `detections.json` 保存坐标、面积和矩形，汇总在 `outputs/task3/detections.json`。
+每张图在 `outputs/task3/图片名/` 有独立目录：`01_mask_raw.png` 是原始颜色掩膜，`02_mask_opened.png` 是开运算结果，`mask.png` 是开闭运算后、**尚未按面积过滤**的掩膜；`04_mask_filtered.png` 则只保留面积合格的轮廓区域，两者用途不同。`05_extracted.png` 为提取的彩色区域，`result.png` 为标注图，`07_comparison.png` 为对比图。坐标、面积和矩形保存在各图的 `detections.json`，汇总见 `outputs/task3/detections.json`。
 
 质心使用 `cx=m10/m00`、`cy=m01/m00`，分母为 0 时跳过。坐标单位是像素，左上角为原点，x 向右、y 向下。面积来自外轮廓，不扣内部孔洞，不等于白色像素数或外接框面积。方块的绿色轮廓与橙色框重合，后画的框会盖住绿色线；圆的两条线不重合，所以绿色更明显。
 
@@ -117,15 +130,13 @@ PNG 中间图按处理顺序编号。任务三按要求保留 `mask.png`、`resu
 python src/task3_color_detect.py --input-dir data/images/holdout --output-dir outputs/task3_holdout
 ```
 
-这张新图未改变原参数，检出 1 个目标，中心为 (293.233,230.590)，轮廓面积为 26638，输出在 `outputs/task3_holdout/06_holdout/`。与绘制真值掩膜对照，程序计算的 IoU 约为 0.999963。2026-10-27 我重新运行了这张新图，终端输出与上述数值一致，记录见任务三截图。
+新图沿用原参数，检出 1 个目标，中心为 (293.233,230.590)，面积为 26638，输出在 `outputs/task3_holdout/06_holdout/`。程序与绘制真值对照得到 IoU 约 0.999963，仅用于核验这张合成图。2026-10-27 我重新运行，终端数值一致，见任务三截图。
 
 ### 任务四（选做）· 实时摄像头（使用视频）
 
 没有摄像头，因此用 `VideoCapture` 读取程序生成的视频。素材由 `src/make_demo_video.py` 生成，是 640×480、120 帧、12 秒的 MJPG 视频。**10 FPS 是源视频帧率，平均实际处理 FPS 本次未测量。**
 
-2026-10-22，我使用默认 V 下限 70 实际回放三次，每次均处理 120 帧并正常结束。保留最近一次记录在 `outputs/task4/video_20261022_172851_016861/`，包含 `frames.jsonl`、`summary.json` 和代表帧图片。
-
-2026-10-27 补截图时又运行两次，均完整处理 120 帧并以 `end_of_video` 正常结束。结果分别保存在 `outputs/task4/video_20261027_215315_704201/` 和 `outputs/task4/video_20261027_215344_100023/`，同样包含逐帧数值、摘要和代表帧图片。
+2026-10-22 已实际观看默认 V 下限 70 的视频，2026-10-27 补截图时再次运行。提交只保留最新一组 `outputs/task4/video_20261027_215344_100023/`：完整处理并回读 120 帧，正常结束，包含 `frames.jsonl`、`summary.json` 和 13 组代表帧。旧的重复运行结果保留在仓库外的本地备份中。
 
 | 视频阶段 | 默认候选数 | 本人实际观察 |
 |---|---:|---|
@@ -134,7 +145,7 @@ python src/task3_color_detect.py --input-dir data/images/holdout --output-dir ou
 | 6～9 秒：暗光 | 0 | 没有框和红点，发生漏检 |
 | 9～12 秒：同色圆干扰 | 2 | 两个物体都有橙色框，圆的绿色轮廓更明显 |
 
-最后一段记录中每帧都有两个候选。最近一次的末帧图为 `snapshots/frame_000120/03_result.png`。把 V 下限改为 40 后，无窗口程序预检的四段候选数为 1、1、1、2；这组视频只有程序预检，没有记作本人观看的对照实验。
+最后一段每帧都有两个候选，末帧图为上述目录中的 `snapshots/frame_000120/03_result.png`。V 下限 40 的视频仅做过无窗口程序预检，四段候选数为 1、1、1、2，**本人尚未观看这组对照视频**。
 
 按仓库要求，视频原文件和输出视频不提交到 Git，clone 后在本地重新生成：
 
@@ -143,15 +154,15 @@ python src/make_demo_video.py --force
 python src/task4_camera.py --video data/videos/demo_color_motion.avi
 ```
 
-这里使用 `--force` 是因为项目保留了合成素材清单；生成器发现同名清单已存在时会拒绝覆盖。它只重建自己生成的 `demo_color_motion.avi` 及对应 JSON 清单，不影响测试图片。需要自己观看 V 下限 40 的对照时运行：
+`--force` 允许重建已有的合成视频清单及同名 AVI，不影响测试图片。V 下限 40 的对照命令为：
 
 ```bash
 python src/task4_camera.py --video data/videos/demo_color_motion.avi --config src/configs/blue_dark.json
 ```
 
-空格暂停/继续，S 保存当前帧，Q 或 Esc 结束。每次运行在 `outputs/task4/video_时间/` 创建新目录，原帧、掩膜、标注图按 `snapshots/frame_编号/01_input.png`、`02_mask.png`、`03_result.png` 成组保存，默认每隔 10 帧及末帧保存。视频 `annotated.avi` 仅留在本地。
+空格暂停/继续，S 保存当前帧，Q 或 Esc 结束。每次在 `outputs/task4/video_时间/` 新建目录，默认从第 1 帧起每隔 10 帧及末帧保存一组 `01_input.png`、`02_mask.png`、`03_result.png`，放在对应 `snapshots/frame_编号/` 中。`annotated.avi` 仅留在本地。
 
-连续画面中，颜色噪声、压缩和目标边界每帧的细微变化会改变轮廓矩，中心坐标就可能抖动；这属于原因分析，不是已经测出的抖动量。可以先用面积过滤去小候选，再对同一目标的中心做指数平滑，例如 `平滑中心=0.3×当前中心+0.7×上次平滑中心`。这样可能更稳定，但会有跟随延迟，还要避免把不同物体的中心混在一起。**中心平滑目前尚未实现和验证**，也不能解决同色物体身份混淆。
+连续画面的颜色噪声、压缩与边界变化会改变轮廓矩，中心就可能抖动。可以用面积过滤去小候选，再对同一目标做指数平滑，例如 `平滑中心=0.3×当前中心+0.7×上次平滑中心`；代价是跟随延迟，且不能混用不同物体的中心。**这是改进思路，中心平滑尚未实现或验证，也不能解决同色干扰。**
 
 ## 四、一次失败案例与改进思路
 
@@ -175,4 +186,4 @@ python src/task3_color_detect.py --config src/configs/blue_dark.json --output-di
 
 本次五张原图由 `src/make_demo_data.py` 本地生成，随机种子为 `20261020`；视频和新增测试图也由随附源码生成，没有使用外部照片。结果只说明这些合成场景的表现，实拍效果尚未验证。
 
-规范整理时，已在新克隆目录复跑，并将 Git 未忽略的个人文件复制到独立目录核验：必做任务、暗光调整、新图和本地生成的视频均运行成功，原始图片未改变。本人也已在 2026-10-27 重新运行并补齐带姓名和时间的截图。提交范围只放本人的 `算法组/Week1/kuaizhenhua/`，视频、虚拟环境、模型和缓存目录由 Git 排除。
+规范整理时已在新克隆目录及独立副本复跑：必做任务、暗光调整、新图和本地生成的视频均成功，原始图片未改变。提交只包含本人的 `算法组/Week1/kuaizhenhua/`；视频、虚拟环境、模型和缓存由 Git 排除。
